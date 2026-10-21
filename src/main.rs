@@ -66,7 +66,10 @@ fn main() {
         0
     };
     println!("Memory total (GB) : {:.2}", total as f64 / GB);
-    println!("Memory free (GB)  : {:.2}", total.saturating_sub(used) as f64 / GB);
+    println!(
+        "Memory free (GB)  : {:.2}",
+        total.saturating_sub(used) as f64 / GB
+    );
     println!("Memory in use (%) : {}", mem_load);
 
     println!("Uptime (minutes)  : {}", System::uptime() / 60);
@@ -90,11 +93,7 @@ fn main() {
         disk_used_pct,
     };
     let score = compute_score(&findings);
-    println!(
-        "Efficiency score   : {} / 100 ({})",
-        score,
-        rating(score)
-    );
+    println!("Efficiency score   : {} / 100 ({})", score, rating(score));
     println!("Done.");
 }
 
@@ -104,19 +103,37 @@ mod tests {
 
     #[test]
     fn healthy_system_is_good() {
-        assert_eq!(compute_score(&Findings { mem_load: 50, disk_used_pct: 40.0 }), 100);
+        assert_eq!(
+            compute_score(&Findings {
+                mem_load: 50,
+                disk_used_pct: 40.0
+            }),
+            100
+        );
         assert_eq!(rating(100), "GOOD");
     }
 
     #[test]
     fn high_usage_lowers_score() {
-        assert_eq!(compute_score(&Findings { mem_load: 80, disk_used_pct: 80.0 }), 80);
+        assert_eq!(
+            compute_score(&Findings {
+                mem_load: 80,
+                disk_used_pct: 80.0
+            }),
+            80
+        );
         assert_eq!(rating(80), "FAIR");
     }
 
     #[test]
     fn very_high_usage_is_poor() {
-        assert_eq!(compute_score(&Findings { mem_load: 95, disk_used_pct: 95.0 }), 50);
+        assert_eq!(
+            compute_score(&Findings {
+                mem_load: 95,
+                disk_used_pct: 95.0
+            }),
+            50
+        );
         assert_eq!(rating(50), "POOR");
     }
 }
